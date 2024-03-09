@@ -28,9 +28,9 @@ function AppBarHome(props: AppBarHomeprop) {
         </SafeAreaView>
       </View>
       <View style={[styles.appBar, {backgroundColor}]}>
-        <IconButton size={25} name="menu" />
+        <IconButton size={30} name="menu" />
         <Text style={styles.appBarText}>Home</Text>
-        <IconButton size={25} name="login" />
+        <IconButton size={30} name="login" />
       </View>
     </View>
   );
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   },
   appBar: {
     height: APPBAR_HEIGHT,
-    borderWidth: 1,
+
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',

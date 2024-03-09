@@ -4,5 +4,6 @@ export const Theme = {
     white: '#FFFFFF',
     borderColor1: '#3CB3FF',
     primary: '#BFDEFF',
+    placeholder: '#808080',
   },
 };
