@@ -1,12 +1,14 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 
 import HomeScreen from './Screens/HomeScreen/HomeScreen';
+import {Provider} from 'react-redux';
+import {store} from './Utils/Store';
 
 function App(): React.JSX.Element {
   return (
-    <Fragment>
+    <Provider store={store}>
       <HomeScreen />
-    </Fragment>
+    </Provider>
   );
 }
 

@@ -1,21 +1,26 @@
 import React, {useEffect, useState} from 'react';
 import {
   Image,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
   useWindowDimensions,
 } from 'react-native';
 import {Theme} from '../../Themes/Theme';
 import AppBarHome from '../../Components/AppBarHome/AppBarHome';
 import IconButton from '../../Components/IconButton/IconButton';
+import CartScreen from '../CartScreen/CartScreen';
+import {ITEM_TYPE} from '../../Utils/CommonTypes/ResponseItemType';
+import {useDispatch} from 'react-redux';
 function HomeScreen() {
   const [search, setSearch] = useState<string>('');
   const [newsData, setNewsData] = useState<any>(null);
   const URL =
-    'https://newsapi.org/v2/everything?q=tesla&from=2024-02-13&sortBy=publishedAt&apiKey=7218a3a1ebd846af8eea24927e8dbbcc';
+    'https://newsapi.org/v2/everything?q=tesla&from=2024-02-21&sortBy=publishedAt&apiKey=7218a3a1ebd846af8eea24927e8dbbcc';
   useEffect(() => {
     const resopnse = () => {
       fetch(URL)
@@ -30,10 +35,23 @@ function HomeScreen() {
         });
     };
     resopnse();
-  }, []);
-  console.log(newsData?.articles);
+  }, [search]);
 
   const {width} = useWindowDimensions();
+  const wait = (timeout: any) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  };
+  const [refresh, setRefresh] = useState<boolean>(false);
+  const onRefresh = () => {
+    setRefresh(true);
+    wait(2000).then(() => setRefresh(false));
+  };
+
+  const dispatch = useDispatch();
+  const addInFav = (item: ITEM_TYPE) => {
+    dispatch({type: 'IMC', data: 1});
+  };
+
   return (
     <View style={styles.container}>
       <AppBarHome backgroundColor={Theme.colors.primary} />
@@ -53,23 +71,33 @@ function HomeScreen() {
           />
         </View>
       </View>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
+        }>
         <View style={styles.listContainer}>
-          {newsData?.articles.map((item: any) => {
+          {newsData?.articles?.map((item: any) => {
             return (
               <View style={[styles.listItemStyle, {width: (width - 20) / 2}]}>
-                <Image
-                  style={{height: 100}}
-                  resizeMode="cover"
-                  source={{uri: item?.urlToImage}}
-                  height={50}
-                />
-                <Text style={styles.listItemTextStyle}>{item?.author}</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    addInFav(item);
+                  }}>
+                  <Image
+                    style={styles.imageStyle}
+                    resizeMode="cover"
+                    source={{uri: item?.urlToImage}}
+                    height={50}
+                  />
+                  <Text style={styles.listItemTextStyle}>{item?.author}</Text>
+                </TouchableOpacity>
               </View>
             );
           })}
         </View>
       </ScrollView>
+      <View style={styles.imageStyle} />
+      <CartScreen />
     </View>
   );
 }
@@ -117,5 +145,9 @@ const styles = StyleSheet.create({
   listItemTextStyle: {
     fontSize: 16,
     fontWeight: '400',
+    backgroundColor: 'orange',
+  },
+  imageStyle: {
+    height: 120,
   },
 });
